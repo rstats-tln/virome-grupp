@@ -76,7 +76,15 @@ ggplot(data = pdata_lot2) +
 ```
 
 ```{r}
+pdata_tgr <- group_by(pdata, arm, timepoint, subject, parent_tax_id)
+pdata_tsum<-summarise(pdata_tgr, ct=n())
+pdata_tsum
+```
 
+```{r}
+pdata_t <- group_by(pdata_tgr, subject, timepoint, arm)
+pdata_ts<-summarise(pdata_t, ct=n())
+pdata_ts
 ```
 
 
