@@ -29,7 +29,7 @@ Phages counted on a subject - different timepoints, treated/not treated
 
 ```{r}
 ggplot(data = pdata_sum, mapping=aes(x=arm, y=ct)) + 
-  geom_boxplot(aes(fill=arm)) +
+  geom_boxplot(aes(fill=arm), size=0.3) +
     facet_wrap(~ timepoint, nrow = 3, ncol = 1) +
     coord_flip()
 ```
