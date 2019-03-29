@@ -1,0 +1,82 @@
+---
+title: "index"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(here)
+```
+```{r}
+pdata <- read_csv(file = here("data/phage_counts.csv"))
+pdata
+```
+```{r}
+pdata_gr <- group_by(pdata, arm, timepoint, subject)
+pdata_sum<-summarise(pdata_gr, ct=n())
+pdata_sum
+```
+
+
+Phages counted on a subject - different timepoints, treated/not treated
+
+
+```{r}
+ggplot(data = pdata_sum, mapping=aes(x=arm, y=ct)) + 
+  geom_boxplot(aes(fill=arm)) +
+    facet_wrap(~ timepoint)
+```
+```{r}
+pdata_str<-mutate(pdata, parent_tax_id=as.character(parent_tax_id))
+pdata_str
+```
+
+Most frequent parent taxons
+
+
+```{r}
+pdata_tax <- group_by(pdata_str, parent_tax_id, timepoint, arm)
+pdata_lot<-summarise(pdata_tax, ct=n()) 
+pdata_lot<-filter(pdata_lot, ct>400)
+pdata_lot<-arrange(pdata_lot, desc(ct))
+pdata_lot
+```
+
+Most frequent parent taxons - change in timepoints
+
+
+```{r}
+ggplot(data = pdata_lot) + 
+  geom_col(aes(x=reorder(parent_tax_id,desc(ct)), y=ct, fill=parent_tax_id)) +
+    facet_wrap(~ timepoint, nrow = 6, ncol = 1)
+```
+
+Most frequent parent taxons - timepoint=4, treated/not treated
+
+```{r}
+pdata_lot2<-filter(pdata_lot, timepoint==4)
+ggplot(data = pdata_lot2) + 
+  geom_col(aes(x=reorder(parent_tax_id,desc(ct)), y=ct, fill=parent_tax_id)) +
+    facet_wrap(~ arm, nrow =2, ncol = 1)
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
